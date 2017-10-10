@@ -1,0 +1,97 @@
+swagger: "2.0"
+info:
+  description: "Scott's Weather API"
+  version: "1.0.0"
+  title: "Weather by Scott"
+  contact:
+    email: "scott@perlcode.org"
+  license:
+    name: "Perl Artistic License"
+    url: "https://dev.perl.org/licenses/artistic.html"
+host: "127.0.0.1:3000"
+basePath: "/api"
+paths:
+  /time/{tz}:
+    get:
+      description: "Current time"
+      x-mojo-name: "time-of-day"
+      parameters:
+        - name: tz
+          in: path
+          required: true
+          description: time zone
+          type: string
+          enum:
+            - "PST8PDT"
+            - "MST7MDT"
+            - "CST6CDT"
+            - "EST5EDT"
+      responses:
+        200:
+          description: "successful response"
+          schema:
+            type: object
+            properties:
+              datetime:
+                type: string
+              epoch:
+                type: integer
+        400:
+          description: "Invalid timezone"
+  /temperature/{lat}/{lon}:
+    get:
+      description: "Current temperature"
+      x-mojo-name: "current-temperature"
+      parameters:
+        - name: lat
+          in: path
+          required: true
+          description: latitude
+          type: integer
+          minimum: -90
+          maximum: 90
+        - name: lon
+          in: path
+          required: true
+          description: longitude
+          type: integer
+          minimum: -180
+          maximum: 180
+
+      responses:
+        200:
+          description: "successful response"
+          schema:
+            type: object
+            properties:
+              fahrenheit:
+                type: string
+              celsius:
+                type: string
+              kelvin:
+                type: string
+        400:
+          description: "Invalid location"
+    post:
+      description: "Update weather"
+      x-mojo-name: "set-current-temperature"
+      parameters:
+        - name: lat
+          in: path
+          required: true
+          description: latitude
+          type: integer
+          minimum: -90
+          maximum: 90
+        - name: lon
+          in: path
+          required: true
+          description: longitude
+          type: integer
+          minimum: -180
+          maximum: 180
+      responses:
+        200:
+          description: "successful update"
+        400:
+          description: "invalid location"

@@ -1,0 +1,101 @@
+swagger: "2.0"
+info:
+  description: "Scott's Weather API"
+  version: "1.0.0"
+  title: "Weather by Scott"
+  contact:
+    email: "scott@perlcode.org"
+  license:
+    name: "Perl Artistic License"
+    url: "https://dev.perl.org/licenses/artistic.html"
+host: "127.0.0.1:3000"
+basePath: "/api"
+paths:
+  /time/{tz}:
+    get:
+      description: "Current time"
+      x-mojo-name: "time-of-day"
+      parameters:
+        - $ref: "#/parameters/TimeZone"
+      responses:
+        200:
+          description: "successful response"
+          schema:
+            $ref: "#/definitions/TimeOfDay"
+        400:
+          description: "Invalid timezone"
+  /temperature/{lat}/{lon}:
+    get:
+      description: "Current temperature"
+      x-mojo-name: "current-temperature"
+      parameters:
+        - $ref: "#/parameters/Latitude"
+        - $ref: "#/parameters/Longitude"
+      responses:
+        200:
+          description: "successful response"
+          schema:
+            $ref: "#/definitions/Temperature"
+        400:
+          description: "Invalid location"
+    post:
+      description: "Update weather"
+      x-mojo-name: "set-current-temperature"
+      parameters:
+        - $ref: "#/parameters/Latitude"
+        - $ref: "#/parameters/Longitude"
+      responses:
+        200:
+          description: "successful update"
+        400:
+          description: "invalid location"
+
+definitions:
+  TimeOfDay:
+    type: "object"
+    properties:
+      datetime:
+        type: "string"
+      epoch:
+        type: "integer"
+
+  Temperature:
+    type: "object"
+    properties:
+      fahrenheit:
+        type: "string"
+      celsius:
+        type: "string"
+      kelvin:
+        type: "string"
+
+parameters:
+  TimeZone:
+    name: tz
+    in: path
+    required: true
+    description: time zone
+    type: string
+    enum:
+      - "PST8PDT"
+      - "MST7MDT"
+      - "CST6CDT"
+      - "EST5EDT"
+
+  Latitude:
+    name: lat
+    in: path
+    required: true
+    description: latitude
+    type: integer
+    minimum: -90
+    maximum: 90
+
+  Longitude:
+    name: lon
+    in: path
+    required: true
+    description: longitude
+    type: integer
+    minimum: -180
+    maximum: 180
